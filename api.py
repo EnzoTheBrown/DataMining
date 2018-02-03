@@ -1,15 +1,20 @@
 from flask import Flask, render_template
 from flask_restful import Resource, Api
-import json
-from src.model.mining import *
 from flask_bootstrap import Bootstrap
+
+import json
+
+from mining.src.model.mining import *
+from learning.model.prediction_during_time import *
+
+from init_data import init_data, apply_overload
 
 app = Flask(__name__)
 # Bootstrap(app)
 
 api = Api(app)
 
-clustering = ClusteringResult(5)
+clustering = ClusteringResult(5, apply_overload(init_data(10)))
 
 
 class Clustering(Resource):

@@ -1,5 +1,5 @@
-from src.model.apriori import apriori
-from src.model.clustering import apply_isolation_forsest, apply_dbscan, apply_kmeans, hierarchichal_ward
+from mining.src.model.apriori import apriori
+from mining.src.model.clustering import apply_isolation_forsest, apply_dbscan, apply_kmeans, hierarchichal_ward
 from collections import Counter
 import pandas as pd
 import glob
@@ -8,47 +8,6 @@ import datetime
 import numpy as np
 import time as tt
 from sklearn import preprocessing
-
-
-def init_data(size):
-    # merging multiple files into one pandaframe
-    path = '../learning/data'  # use your path
-    allFiles = glob.glob(path + "/sms-call-internet-mi-*.txt-sample.csv")
-    frame = pd.DataFrame()
-    list_ = []
-    i = 0
-    for file_ in allFiles:
-        if i == size:
-            break
-        i += 1
-        df = pd.read_csv(file_,delimiter=',',index_col=None, header=0)
-        df['day'] = re.search(r'(\d+-\d+-\d+)',file_.split('/')[-1]).group(1)
-        list_.append(df)
-    frame = pd.concat(list_)
-    frame.columns = ['Id', 'Square', 'Time', 'Country', 'SMSin', 'SMSout', 'Callin', 'Callout', 'Internet', 'day']
-    # frame = overload(frame)
-
-    return frame
-
-
-def overload(df):
-    df = df.dropna()
-    df_norm = df[['SMSin', 'SMSout', 'Callin', 'Callout', 'Internet']]
-
-    df_norm = df_norm.astype(float)
-    min_max_scaler = preprocessing.MinMaxScaler()
-    df_norm = min_max_scaler.fit_transform(df_norm)
-    df_norm = pd.DataFrame(df_norm)
-    df_norm[5] = df_norm[0] + df_norm[1] + df_norm[2] + df_norm[3] + df_norm[4]
-    df = df.reset_index()
-    df.head()
-    df = df.drop('index', axis=1)
-
-    df['charge'] = df_norm[5]
-    ind_overload = df['charge'].quantile(0.90)
-    df_overload = df[df['charge'] > ind_overload]
-
-    return df_overload
 
 
     # days = set(frame['day'])
@@ -94,8 +53,8 @@ def overload_frequence(square, dataset):
     return res/len(dataset)
 
 class ClusteringResult:
-    def __init__(self, size):
-        self.init_data = init_data(size)
+    def __init__(self, size, init_data):
+        self.init_data = init_data
         self.mem = {}
 
     def get_most_frequent(self, df, labels):
