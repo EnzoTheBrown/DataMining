@@ -1,3 +1,4 @@
+var clusters = 9;
 getId = function(i, j, data){
     var square = (j)*100 + (100 - i);
     if(data.hasOwnProperty(square)){
@@ -11,8 +12,8 @@ var gdt = function gridData(dt) {
     var data = new Array();
     var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
     var ypos = 1;
-    var width = 5;
-    var height = 5;
+    var width = 7;
+    var height = 7;
 
     // iterate for rows
     for (var row = 0; row < 100; row++) {
@@ -38,7 +39,19 @@ var gdt = function gridData(dt) {
     return data;
 }
 
-        // I like to log the data to the console for quick debugging
+var btn_pred = document.getElementById("btn_pred");
+btn_pred.addEventListener("click", function(){
+    var ourrequest = new XMLHttpRequest();
+    ourrequest.open('GET', 'http://localhost:5000/predict/ttt');
+    ourrequest.onload = function(){
+        var data = JSON.parse(ourrequest.responseText);
+        data = JSON.parse(data);
+	console.log(data);
+    };
+        ourrequest.send();
+});
+
+
 
 var draw = function drawGrid(data) {
     var gridData = gdt(data);
@@ -71,11 +84,16 @@ var draw = function drawGrid(data) {
         })
         .style("fill", function (d) {
             var colors = [
-                "#ef5",
-                "#2C93E8",
-                "#F56C4E",
-                "#f3e",
-                "#838690"
+                "#2635ED",
+                "#45B841",
+                //"#7FDC3B",
+                //"#ABDC3B",
+                "#CBDC3B",
+                "#EDCC26",
+                "#EDA226",
+                "#ED7D26",
+                "#ED2641",
+                "#ED5026"
             ];
             return colors[d.click];
         })
@@ -86,7 +104,7 @@ var draw = function drawGrid(data) {
 var btn_dbscan = document.getElementById("btn_dbscan");
 btn_dbscan.addEventListener("click", function(){
     var ourrequest = new XMLHttpRequest();
-    ourrequest.open('GET', 'http://localhost:5000/dbscan');
+ourrequest.open('GET', 'http://localhost:5000/dbscan');
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
@@ -101,15 +119,13 @@ btn_dbscan.addEventListener("click", function(){
 var btn_tree = document.getElementById("btn_tree");
 btn_tree.addEventListener("click", function(){
     var ourrequest = new XMLHttpRequest();
-    ourrequest.open('GET', 'http://localhost:5000/tree');
+ ourrequest.open('GET', 'http://localhost:5000/tree');
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
-
         document.getElementById("ttle").innerHTML = "isolation forest";
         d3.select('svg').remove();
         draw(data['labels']);
-
     };
         ourrequest.send();
 });
@@ -121,7 +137,7 @@ btn.addEventListener("click", function(){
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
-
+	console.log(data);
         document.getElementById("ttle").innerHTML = "kmeans";
         d3.select('svg').remove();
         draw(data['labels']);
@@ -137,7 +153,6 @@ btn_ward.addEventListener("click", function(){
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
-
         document.getElementById("ttle").innerHTML = "ward";
         d3.select('svg').remove();
         draw(data['labels']);
@@ -145,7 +160,7 @@ btn_ward.addEventListener("click", function(){
 
     };
         ourrequest.send();
-    });
+});
 
 var btn_apriori = document.getElementById("btn_apriori");
 btn_apriori.addEventListener("click", function(){
@@ -153,10 +168,10 @@ btn_apriori.addEventListener("click", function(){
     ourrequest.open('GET', 'http://localhost:5000/apriori');
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
-        data = JSON.parse(data);
         console.log(data);
         document.getElementById("ttle").innerHTML = "apriori";
         d3.select('svg').remove();
     };
         ourrequest.send();
-    });
+});
+

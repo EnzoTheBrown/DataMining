@@ -1,7 +1,7 @@
 import pandas as pd
 import glob
 import re
-
+from learning.model.predict import PredictionResult
 def init_data(size):
     # merging multiple files into one pandaframe
     path = 'data'  # use your path
@@ -13,7 +13,7 @@ def init_data(size):
         if i == size:
             break
         i += 1
-        df = pd.read_csv(file_,delimiter=',',index_col=None, header=0).sample(frac=0.01)
+        df = pd.read_csv(file_,delimiter=',',index_col=None, header=0).sample(frac=.5)
         df['day'] = re.search(r'(\d+-\d+-\d+)',file_.split('/')[-1]).group(1)
         list_.append(df)
     frame = pd.concat(list_)
@@ -55,6 +55,3 @@ if __name__ == '__main__':
     print('#'*50)
     q = df['SMSin'].quantile(0.95)
     df['overload'] = df['SMSin'].apply(lambda x: x > q)
-    print(df.head())
-
-
