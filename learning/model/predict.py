@@ -1,7 +1,9 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+from learning.model.LinearRegressionPrediction import linear_regression_prediction
+from learning.model.SVMPrediction import svm_prediction
 from sklearn.neural_network import MLPRegressor
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 
 class PredictionResult:
@@ -21,19 +23,20 @@ class PredictionResult:
     def reset_clusters(self):
         self.clusters = {}
 
-    # A cluster is a list of square 
     def get_cluster(self, name, cluster):
         self.clusters[name] = self.df[self.df['Square'].isin(cluster)]
 
     def predict(self, cluster):
         print(self.clusters)
         data = self.clusters[cluster]
-        return {'time':list(data['Time']), 'value':list(data['SMSin'])}
+        return {'x':list(data['Time']), 'y':list(data['SMSin'])}
 
+    def linear_predict(self, cluster):
+        data = self.clusters[cluster]
+        linear_regression_prediction(data)
 
-        
+    def svm_predict(self, cluster):
+        data = self.clusters[cluster]
+        svm_prediction(data)
 
-
-    
-    
 

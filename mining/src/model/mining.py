@@ -10,23 +10,6 @@ import time as tt
 from sklearn import preprocessing
 
 
-    # days = set(frame['day'])
-    # squares = set(frame['Square'])
-    #
-    # for day in days:
-    #     for square in squares:
-    #         d = df[df['Square'] == square]
-    #         dt = d[d['day'] == day]
-    #
-    #         smsin = np.std(dt['SMSin'])
-    #         smsout = np.std(dt['SMSout'])
-    #         callin = np.std(dt['Callin'])
-    #         callout = np.std(dt['Callout'])
-    #         internet = np.std(dt['Internet'])
-    #
-    #
-
-
 def keep_a_square(x, xmin=20, xmax=60, ymin=15, ymax=60):
     j = x%100
     if j > xmax or j < xmin:

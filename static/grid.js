@@ -39,19 +39,6 @@ var gdt = function gridData(dt) {
     return data;
 }
 
-var btn_pred = document.getElementById("btn_pred");
-btn_pred.addEventListener("click", function(){
-    var ourrequest = new XMLHttpRequest();
-    ourrequest.open('GET', 'http://localhost:5000/predict/ttt');
-    ourrequest.onload = function(){
-        var data = JSON.parse(ourrequest.responseText);
-        data = JSON.parse(data);
-	console.log(data);
-    };
-        ourrequest.send();
-});
-
-
 
 var draw = function drawGrid(data) {
     var gridData = gdt(data);
@@ -101,10 +88,77 @@ var draw = function drawGrid(data) {
 };
 
 
+$(document).ready(function(){
+	$("button").click(function(){
+		$.get("predict/ttt", function(data, status){
+       			draw_histogram("line", data);
+    		});
+	});
+});
+
+var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+var y = d3.scale.linear().range([height, 0]);
+
+var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    width = 600 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", 200 + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
+
+var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10);
+
+var draw_histogram =function(error, data) {
+	data = JSON.parse(data);
+	console.log(data);
+	svg.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + 200 + ")")
+	    .call(xAxis)
+	    .selectAll("text")
+	    .style("text-anchor", "end")
+	    .attr("dx", "-.8em")
+	    .attr("dy", "-.55em")
+	    .attr("transform", "rotate(-90)" );
+	
+	svg.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis)
+	    .append("text")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", 6)
+	    .attr("dy", ".71em")
+	    .style("text-anchor", "end")
+	    .text("Value ($)");
+	
+	svg.selectAll("bar")
+	    .data(data)
+	    .enter()
+	    .append("rect")
+	    .style("fill", "steelblue")
+	    .attr("x", function(d) { return x(d.x); })
+	    .attr("y", function(d) { return y(d.y); })
+	    .attr("height", function(d) { return 200 - y(d.y); });
+};
+
+ 
+
 var btn_dbscan = document.getElementById("btn_dbscan");
 btn_dbscan.addEventListener("click", function(){
     var ourrequest = new XMLHttpRequest();
-ourrequest.open('GET', 'http://localhost:5000/dbscan');
+ourrequest.open('GET', 'http://localhost:5000/clustering/dbscan');
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
@@ -116,10 +170,12 @@ ourrequest.open('GET', 'http://localhost:5000/dbscan');
         ourrequest.send();
 });
 
+
+
 var btn_tree = document.getElementById("btn_tree");
 btn_tree.addEventListener("click", function(){
     var ourrequest = new XMLHttpRequest();
- ourrequest.open('GET', 'http://localhost:5000/tree');
+    ourrequest.open('GET', 'http://localhost:5000/clustering/tree');
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
@@ -133,7 +189,7 @@ btn_tree.addEventListener("click", function(){
 var btn = document.getElementById("btn");
 btn.addEventListener("click", function(){
     var ourrequest = new XMLHttpRequest();
-    ourrequest.open('GET', 'http://localhost:5000/kmeans/'+clusters);
+    ourrequest.open('GET', 'http://localhost:5000/clustering/kmeans/'+clusters);
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
@@ -141,15 +197,15 @@ btn.addEventListener("click", function(){
         document.getElementById("ttle").innerHTML = "kmeans";
         d3.select('svg').remove();
         draw(data['labels']);
+
     };
         ourrequest.send();
 });
 
-
 var btn_ward = document.getElementById("btn_ward");
 btn_ward.addEventListener("click", function(){
     var ourrequest = new XMLHttpRequest();
-    ourrequest.open('GET', 'http://localhost:5000/ward');
+    ourrequest.open('GET', 'http://localhost:5000/clustering/ward');
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         data = JSON.parse(data);
@@ -165,7 +221,7 @@ btn_ward.addEventListener("click", function(){
 var btn_apriori = document.getElementById("btn_apriori");
 btn_apriori.addEventListener("click", function(){
     var ourrequest = new XMLHttpRequest();
-    ourrequest.open('GET', 'http://localhost:5000/apriori');
+    ourrequest.open('GET', 'http://localhost:5000/clustering/apriori');
     ourrequest.onload = function(){
         var data = JSON.parse(ourrequest.responseText);
         console.log(data);
@@ -174,4 +230,5 @@ btn_apriori.addEventListener("click", function(){
     };
         ourrequest.send();
 });
+
 

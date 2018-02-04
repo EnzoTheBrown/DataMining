@@ -25,7 +25,7 @@ def init_data(size):
 
 def apply_overload(df):
     df = df.dropna()
-    q = df['SMSin'].quantile(0.95)
+    q = df['SMSin'].quantile(0.7)
     df['overload'] = df['SMSin'].apply(lambda x: x > q)
     return df
 

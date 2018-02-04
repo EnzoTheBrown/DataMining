@@ -1,17 +1,13 @@
+from init_data import init_data, apply_overload
 from flask import Flask, render_template
 from flask_restful import Resource, Api
 from flask_bootstrap import Bootstrap
-
-import json
-
 from mining.src.model.mining import *
 from learning.model.predict import *
+import json
 
-from init_data import init_data, apply_overload
 
 app = Flask(__name__)
-# Bootstrap(app)
-
 api = Api(app)
 
 
@@ -48,7 +44,7 @@ class Clustering(Resource):
 
 class Prediction(Resource):
     def get(self, dummy):
-        d = prediction.predict('0')
+        d = prediction.svm_predict('1')
         return json.dumps(d)
 
 @app.route('/')
@@ -65,9 +61,13 @@ def show_rapport():
 def show_prediction():
     return render_template("index.html")
 
+@app.route('/visu')
+def show_visu():
+    return render_template("visu.html")
 
 
-api.add_resource(Clustering, '/<string:algo>', '/<string:algo>/<int:cluster>')
+
+api.add_resource(Clustering, '/clustering/<string:algo>', '/clustering/<string:algo>/<int:cluster>')
 api.add_resource(Prediction, '/predict/<string:dummy>')
 
 def run():
