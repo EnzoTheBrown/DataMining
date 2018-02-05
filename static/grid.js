@@ -90,7 +90,7 @@ var draw = function drawGrid(data) {
 
 $(document).ready(function(){
 	$("button").click(function(){
-		$.get("predict/ttt", function(data, status){
+		$.get("prediction/ttt", function(data, status){
        			draw_histogram("line", data);
     		});
 	});

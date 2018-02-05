@@ -44,7 +44,8 @@ class Clustering(Resource):
 
 class Prediction(Resource):
     def get(self, dummy):
-        d = prediction.svm_predict('1')
+        d = {} # prediction.svm_predict('1')
+        prediction.linear_predict('1')
         return json.dumps(d)
 
 @app.route('/')
@@ -68,7 +69,7 @@ def show_visu():
 
 
 api.add_resource(Clustering, '/clustering/<string:algo>', '/clustering/<string:algo>/<int:cluster>')
-api.add_resource(Prediction, '/predict/<string:dummy>')
+api.add_resource(Prediction, '/prediction/<string:dummy>')
 
 def run():
     app.run(debug=True)

@@ -25,9 +25,8 @@ class PredictionResult:
 
     def get_cluster(self, name, cluster):
         self.clusters[name] = self.df[self.df['Square'].isin(cluster)]
-
+        
     def predict(self, cluster):
-        print(self.clusters)
         data = self.clusters[cluster]
         return {'x':list(data['Time']), 'y':list(data['SMSin'])}
 
