@@ -4,6 +4,7 @@ from flask_restful import Resource, Api
 from flask_bootstrap import Bootstrap
 from mining.src.model.mining import *
 from learning.model.predict import *
+from learning.quality_cluster import *
 import json
 
 
@@ -33,11 +34,10 @@ class Clustering(Resource):
         if algo == 'ward':
             d = clustering.get_hierarchical_result()
         
-        # preparing the cluster for machine learning
-        clusters = prediction.dict2clusters(d['labels'])
-        prediction.reset_clusters()
-        for key, cluster in clusters.items():
-            prediction.get_cluster(key, cluster)
+		# preparing the cluster for machine learning
+        print('#'*10)
+        print(d)
+        compute_anova(df, d)
         data = json.dumps(d)
         return data
     
@@ -45,7 +45,7 @@ class Clustering(Resource):
 class Prediction(Resource):
     def get(self, dummy):
         d = {} # prediction.svm_predict('1')
-        prediction.linear_predict('1')
+        # prediction.linear_predict('1')
         return json.dumps(d)
 
 @app.route('/')

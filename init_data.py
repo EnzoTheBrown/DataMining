@@ -2,6 +2,8 @@ import pandas as pd
 import glob
 import re
 from learning.model.predict import PredictionResult
+
+
 def init_data(size):
     # merging multiple files into one pandaframe
     path = 'data'  # use your path
@@ -51,7 +53,5 @@ def overload(df):
 
 if __name__ == '__main__':
     df = init_data(10)
-    print(df.head())
-    print('#'*50)
     q = df['SMSin'].quantile(0.95)
     df['overload'] = df['SMSin'].apply(lambda x: x > q)
